@@ -1,5 +1,7 @@
 MAIN	:= main.exe
-SOURCE_FILES	:= main.cpp
+SOURCE_FILES	:= 	main.cpp \
+					local_signal.cpp
+
 OBJECT_FILES	:= $(patsubst %.cpp,%.o,$(SOURCE_FILES))
 
 LINK_LIBRARIES	:= 
