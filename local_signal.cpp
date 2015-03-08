@@ -28,7 +28,7 @@ void (*local_signal(int signo, void (*handler)(int)))(int)
 	old_handler = NULL;
 	if (handler == NULL)
 	{
-		if (*ptr != NULL)
+		if (*ptr != NULL && (*ptr)->signo == signo)
 		{
 			old_handler = (*ptr)->handler;
 			(*ptr)->handler = handler;
