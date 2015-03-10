@@ -1,6 +1,7 @@
 MAIN	:= main.exe
 SOURCE_FILES	:= 	main.cpp \
-					local_signal.cpp
+					local_signal.cpp \
+					main_sort.cpp
 
 OBJECT_FILES	:= $(patsubst %.cpp,%.o,$(SOURCE_FILES))
 
