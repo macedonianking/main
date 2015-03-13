@@ -2,11 +2,26 @@
 #include <stdlib.h>
 
 #include "local_signal.h"
+#include "curl_main.h"
 
+static void main_program_enter();
+static void main_program_leave();
 static void main_signal_handler(int signo);
 static void main_signal_process(int signo);
+static void main_signal_test();
 
 int main(int argc, char **argv)
+{
+	main_program_enter();
+	main_signal_test();
+	curl_main_test();
+
+	printf("Hellow world\n");
+	main_program_leave();
+	return EXIT_SUCCESS;
+}
+
+void main_signal_test()
 {
 	void (*old_handler)(int);
 
@@ -14,7 +29,7 @@ int main(int argc, char **argv)
 	old_handler = local_signal(10, main_signal_handler);
 	if (old_handler != NULL)
 	{
-		return 0;
+		return;
 	}
 
 	do_local_signal(10);
@@ -22,7 +37,7 @@ int main(int argc, char **argv)
 	if (old_handler != main_signal_handler)
 	{
 		printf("get old handler failure\n");
-		return 0;
+		return;
 	}
 
 	do_local_signal(10);
@@ -30,14 +45,12 @@ int main(int argc, char **argv)
 	if (old_handler != main_signal_process)
 	{
 		printf("get old process failure\n");
-		return 0;
+		return;
 	}
 
 	do_local_signal(10);
 	release_local_signal_handlers();
 	do_local_signal(10);
-	printf("Hellow world\n");
-	return EXIT_SUCCESS;
 }
 
 void main_signal_handler(int signo)
@@ -52,4 +65,14 @@ void main_signal_process(int signo)
 	char buffer[1024];
 
 	printf("main_signal_process:singo=%d\n", signo);
+}
+
+void main_program_enter()
+{
+
+}
+
+void main_program_leave()
+{
+	
 }
