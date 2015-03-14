@@ -1,4 +1,5 @@
 *.o
+*.html
 main.exe
 main
 main.sublime-workspace

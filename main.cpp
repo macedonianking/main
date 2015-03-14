@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 	main_signal_test();
 	curl_main_test();
 
-	printf("Hellow world\n");
+	printf("Hello world\n");
 	main_program_leave();
 	return EXIT_SUCCESS;
 }
@@ -69,10 +69,10 @@ void main_signal_process(int signo)
 
 void main_program_enter()
 {
-
+	curl_main_enter();
 }
 
 void main_program_leave()
 {
-	
+	curl_main_leave();
 }
