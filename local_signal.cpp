@@ -87,7 +87,7 @@ void release_local_signal_handlers()
 	int i;
 	struct signo_handler_entity **ptr, *next;
 
-	for (int i = 0; i < MAX_HANDLER_BUFFER_SIZE; ++i)
+	for (i = 0; i < MAX_HANDLER_BUFFER_SIZE; ++i)
 	{
 		ptr = &gHandlerBuffer[i];
 

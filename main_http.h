@@ -1,0 +1,10 @@
+#ifndef MAIN_HTTP_H
+#define MAIN_HTTP_H
+
+#define MAIN_HTTP_OK					200
+#define MAIN_HTTP_PARTIAL_CONTENT		204
+
+#define MAIN_HTTP_MOVED_PERMANENTLY		301
+#define MAIN_HTTP_FOUND					302
+
+#endif // MAIN_HTTP_H
