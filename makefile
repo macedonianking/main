@@ -2,7 +2,8 @@ MAIN	:= main
 SOURCE_FILES	:= 	main.cpp \
 					local_signal.cpp \
 					main_sort.cpp \
-					curl_main.cpp
+					curl_main.cpp \
+					main_print.cpp
 
 OBJECT_FILES	:= $(patsubst %.cpp,%.o,$(SOURCE_FILES))
 CURL_HOME		:= /usr/share/curl

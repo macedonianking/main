@@ -3,6 +3,7 @@
 
 #include "local_signal.h"
 #include "curl_main.h"
+#include "main_sort.h"
 
 static void main_program_enter();
 static void main_program_leave();
@@ -14,7 +15,8 @@ int main(int argc, char **argv)
 {
 	main_program_enter();
 	main_signal_test();
-	curl_main_test();
+	// curl_main_test();
+	main_sort_test();
 
 	printf("Hello world\n");
 	main_program_leave();
@@ -55,15 +57,11 @@ void main_signal_test()
 
 void main_signal_handler(int signo)
 {
-	char buffer[1024];
-
 	printf("main_signal_handler:singo=%d\n", signo);
 }
 
 void main_signal_process(int signo)
 {
-	char buffer[1024];
-
 	printf("main_signal_process:singo=%d\n", signo);
 }
 
