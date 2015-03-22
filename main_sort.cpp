@@ -12,6 +12,8 @@ void main_sort_test()
 {
 	int buffer1[] = { 3, 2, 4, 1, 5 };
 	int buffer2[] = { 3, 5, 4, 1, 2 };
+	int buffer3[] = { 3, 5, 4, 1, 2 };
+	int buffer4[] = { 5, 2 };
 	const char *str;
 	int n;
 
@@ -19,6 +21,10 @@ void main_sort_test()
 	main_print_int_buffer(buffer1, ARRAY_SIZE(buffer1));
 	main_sort_select(buffer2, ARRAY_SIZE(buffer2));
 	main_print_int_buffer(buffer2, ARRAY_SIZE(buffer2));
+	main_sort_linear_insert(buffer3, ARRAY_SIZE(buffer3));
+	main_print_int_buffer(buffer3, ARRAY_SIZE(buffer3));
+	main_sort_linear_insert(buffer4, ARRAY_SIZE(buffer4));
+	main_print_int_buffer(buffer4, ARRAY_SIZE(buffer4));
 
 	// main_money_find_test();
 	n = 0;
@@ -141,6 +147,57 @@ void main_sort_select(int *ptr, int n)
 			ptr[min] = ptr[i];
 			ptr[i] = t;
 		}
+	}
+}
+
+void main_sort_binary_insert(int *ptr, int n)
+{
+	int i, j;
+	int s, e, m;
+	int t;
+
+	for (i = 1; i < n; ++i)
+	{
+		s = 0;
+		e = i;
+		while (s < e)
+		{
+			m = s + (e - s) / 2;
+			if (ptr[m] <= ptr[i])
+			{
+				s = m + 1;
+			}
+			else
+			{
+				e = m;
+			}
+		}
+
+		t = ptr[i];
+		for (j = i; j > e; --j)
+		{
+			ptr[j] = ptr[j - 1];
+		}
+		ptr[j] = t;
+	}
+}
+
+void main_sort_linear_insert(int *ptr, int n)
+{
+	int i, j;
+	int t;
+	int m;
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (j = i; j > 0 && ptr[j - 1] > ptr[i]; --j)
+			;
+		t = ptr[i];
+		for (m = i; m != j; --m)
+		{
+			ptr[m] = ptr[m - 1];
+		}
+		ptr[m] = t;
 	}
 }
 

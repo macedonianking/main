@@ -12,6 +12,8 @@ int *main_binary_search(int *ptr, int n, int v);
 void main_sort_bubble(int *ptr, int n);
 void main_sort_insert(int *ptr, int n);
 void main_sort_select(int *ptr, int n);
+void main_sort_binary_insert(int *ptr, int n);
+void main_sort_linear_insert(int *ptr, int n);
 
 void main_sort_test();
 
