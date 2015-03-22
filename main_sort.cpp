@@ -10,12 +10,24 @@ void main_money_find_test();
 
 void main_sort_test()
 {
-	int buffer[] = { 3, 2, 4, 1, 5 };
+	int buffer1[] = { 3, 2, 4, 1, 5 };
+	int buffer2[] = { 3, 5, 4, 1, 2 };
+	const char *str;
+	int n;
 
-	main_sort_insert(buffer, ARRAY_SIZE(buffer));
-	main_print_int_buffer(buffer, ARRAY_SIZE(buffer));
+	main_sort_insert(buffer1, ARRAY_SIZE(buffer1));
+	main_print_int_buffer(buffer1, ARRAY_SIZE(buffer1));
+	main_sort_select(buffer2, ARRAY_SIZE(buffer2));
+	main_print_int_buffer(buffer2, ARRAY_SIZE(buffer2));
 
 	// main_money_find_test();
+	n = 0;
+	str = main_find_maximum_word("main_money_find_test()", &n);
+	if (str != NULL)
+	{
+		fwrite(str, n, 1, stdout);
+		fputc('\n', stdout);
+	}
 }
 
 int *main_binary_search(int *ptr, int n, int v)
@@ -107,6 +119,31 @@ void main_sort_insert(int *ptr, int n)
 	}
 }
 
+void main_sort_select(int *ptr, int n)
+{
+	int i, j;
+	int min;
+	int t;
+
+	for (i = 0; i < n; ++i)
+	{
+		min = i;
+		for (j = i + 1; j < n; ++j)
+		{
+			if (ptr[j] < ptr[min])
+			{
+				min = j;
+			}
+		}
+		if (min != i)
+		{
+			t = ptr[min];
+			ptr[min] = ptr[i];
+			ptr[i] = t;
+		}
+	}
+}
+
 void main_money_size_find(struct main_money_count *ptr, int count, int *money)
 {
 	struct main_money_count *end;
@@ -168,4 +205,241 @@ void main_money_find_test()
 		}
 		fprintf(stdout, "\n");
 	}	
+}
+
+int main_buffer_sum(int *ptr, int n)
+{
+	int s;
+
+	s = 0;
+	while (n-- > 0)
+	{
+		s += *ptr++;
+	}
+	return s;
+}
+
+int main_find_maximum_delta(int *ptr, int n, int *out)
+{
+	int i;
+	int delta;
+	int max;
+
+	if (n < 2)
+	{
+		return 1;
+	}
+
+	delta = ptr[1] - ptr[0];
+	max = delta;
+	for (i = 2; i < n; ++i)
+	{
+		delta = ptr[i] - ptr[i - 1];
+		if (max < delta)
+		{
+			max = delta;
+		}
+	}
+	*out = max;
+
+	return 0;
+}
+
+int main_find_same_value_size(int *ptr, int n)
+{
+	int size;
+	int status; // last value is difference from left
+	int i;
+
+	size = 0;
+	status = 1;
+	for (i = 1; i < n; ++i)
+	{
+		if (status && (ptr[i] == ptr[i - 1]))
+		{
+			++size;
+		}
+		status = ptr[i] != ptr[i - 1];
+	}
+
+	return size;
+}
+
+int main_buffer_negative_size(int *ptr, int n)
+{
+	int size;
+	int i;
+
+	size = 0;
+	for (i = 0; i < n; ++i)
+	{
+		if (ptr[i] < 0)
+		{
+			++size;
+		}
+	}
+
+	return size;
+}
+
+int main_buffer_last_even_index(int *ptr, int n)
+{
+	int i;
+	int r;
+
+	r = -1;
+	for (i = 0; i < n; ++i)
+	{
+		if ((ptr[i] % 2) == 0)
+		{
+			r = i;
+		}
+	}
+
+	return r;
+}
+
+int main_buffer_max_even_index(int *ptr, int n)
+{
+	int i;
+	int r;
+
+	r = -1;
+	for (i = 0; i < n; ++i)
+	{
+		if (ptr[i] % 2 == 0)
+		{
+			if (r == -1 || ptr[r] < ptr[i])
+			{
+				r = i;
+			}
+		}
+	}
+
+	return r;
+}
+
+int main_string_is_palindrom(const char *str)
+{
+	const char *end;
+
+	end = str;
+	while (*end != '\0')
+	{
+		++end;
+	}
+	--end;
+
+	while (str < end && *str == *end)
+	{
+		++str;
+		--end;
+	}
+
+	return str < end && *str != *end;
+}
+
+
+double main_pow_integer(double v, int n)
+{
+	double r;
+
+	r = v;
+	if (n > 0)
+	{
+		while (n--)
+		{
+			r *= v;
+		}
+	}
+	else
+	{
+		while (n++)
+		{
+			r /= v;
+		}
+	}
+
+	return r;
+}
+
+void main_buffer_find_max_and_min(int *ptr, int n, int *max, int *min)
+{
+	int i;
+
+	if (n <= 0)
+	{
+		return;
+	}
+
+	max = ptr;
+	min = ptr;
+	for (i = 1; i < n; ++i)
+	{
+		if (*max < ptr[i])
+		{
+			max = ptr + i;
+		}
+
+		if (ptr[i] < *min)
+		{
+			min = ptr + i;
+		}
+	}
+}
+
+#define WORD_STATE_IN 	0
+#define WORD_STATE_OFF	1
+
+const char *main_find_maximum_word(const char *str, int *outN)
+{
+	int state;
+	int n;
+	int maxN;
+	const char *head;
+	const char *maxHead;
+
+	state = WORD_STATE_OFF;
+	head = NULL;
+	n = 0;
+	maxN = 0;
+	maxHead = NULL;
+
+	while (*str != '\0')
+	{
+		if (('a' <= *str && *str <= 'z') 
+			|| ('A' <= *str && *str <= 'Z'))
+		{
+			if (state == WORD_STATE_OFF)
+			{
+				state = WORD_STATE_IN;
+				head = str;
+				n = 1;
+			}
+			else
+			{
+				++n;
+				if (n > maxN)
+				{
+					maxN = n;
+					maxHead = head;
+				}
+			}
+		}
+		else
+		{
+			if (state == WORD_STATE_IN)
+			{
+				state = WORD_STATE_OFF;
+			}
+		}
+		++str;
+	}
+
+	if (maxN > 0)
+	{
+		*outN = maxN;
+	}
+
+	return maxHead;
 }
