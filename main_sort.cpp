@@ -14,6 +14,7 @@ void main_sort_test()
 	int buffer2[] = { 3, 5, 4, 1, 2 };
 	int buffer3[] = { 3, 5, 4, 1, 2 };
 	int buffer4[] = { 5, 2 };
+	int buffer5[] = { 3, 5, 4, 1, 2 };
 	const char *str;
 	int n;
 
@@ -25,6 +26,8 @@ void main_sort_test()
 	main_print_int_buffer(buffer3, ARRAY_SIZE(buffer3));
 	main_sort_linear_insert(buffer4, ARRAY_SIZE(buffer4));
 	main_print_int_buffer(buffer4, ARRAY_SIZE(buffer4));
+	main_sort_divide_merge(buffer5, ARRAY_SIZE(buffer5));
+	main_print_int_buffer(buffer5, ARRAY_SIZE(buffer5));
 
 	// main_money_find_test();
 	n = 0;
@@ -188,7 +191,7 @@ void main_sort_linear_insert(int *ptr, int n)
 	int t;
 	int m;
 
-	for (int i = 0; i < n; ++i)
+	for (i = 0; i < n; ++i)
 	{
 		for (j = i; j > 0 && ptr[j - 1] > ptr[i]; --j)
 			;
@@ -499,4 +502,44 @@ const char *main_find_maximum_word(const char *str, int *outN)
 	}
 
 	return maxHead;
+}
+
+void main_sort_divide_merge(int *ptr, int n)
+{
+	int m;
+	int *p, *q, *r, *iter;
+	int t;
+
+	if (n < 2)
+	{
+		return;
+	}
+
+	m = n / 2;
+	main_sort_divide_merge(ptr, m);
+	main_sort_divide_merge(ptr + m, n - m);
+
+	p = ptr;
+	q = ptr + m;
+	r = ptr + n;
+	while (p < q && q < r)
+	{
+		if (*p <= *q)
+		{
+			++p;
+		}
+		else
+		{
+			t = *q;
+			iter = q;
+			while (iter != p)
+			{
+				*iter = *(iter - 1);
+				--iter;
+			}
+			*iter = t;
+			++q;
+			++p;
+		}
+	}
 }
