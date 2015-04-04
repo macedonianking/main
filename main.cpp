@@ -67,10 +67,14 @@ void main_signal_process(int signo)
 
 void main_program_enter()
 {
+#ifdef F_USE_CURL
 	curl_main_enter();
+#endif
 }
 
 void main_program_leave()
 {
+#ifdef F_USE_CURL
 	curl_main_leave();
+#endif
 }
