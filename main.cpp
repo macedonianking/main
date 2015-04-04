@@ -5,6 +5,7 @@
 #include "curl_main.h"
 #include "main_sort.h"
 #include "main_sqlite3.h"
+#include "main_string_builder.h"
 
 static void main_program_enter();
 static void main_program_leave();
@@ -19,6 +20,7 @@ int main(int argc, char **argv)
 	// curl_main_test();
 	// main_sort_test();
 	main_sqlite3_test();
+	// main_string_builder_test();
 
 	// printf("Hello world\n");
 	main_program_leave();

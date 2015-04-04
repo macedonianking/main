@@ -27,7 +27,7 @@ void main_sqlite3_test_open(const char *name)
 	struct main_sqlite3_open_data data;
 
 	db = NULL;
-	if (rc = sqlite3_open(name, &db))
+	if (rc = sqlite3_open_v2(name, &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL))
 	{
 		fprintf(stdout, "open database failure: %s reason=%s\n", name, sqlite3_errmsg(db));
 		goto FINISH;
