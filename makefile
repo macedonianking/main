@@ -1,6 +1,6 @@
 ifeq (${OS},Windows_NT)
 MAIN		:= main.exe
-LINK_PATH	:= -Llibs
+LINK_PATH	:= -L.
 else
 MAIN	:= main
 endif
@@ -23,6 +23,7 @@ endif
 SOURCE_FILES	:= 	main.cpp \
 					local_signal.cpp \
 					main_sort.cpp \
+					main_sqlite3.cpp \
 					main_print.cpp ${CURL_SOURCE_FILES}
 
 OBJECT_FILES	:= $(patsubst %.cpp,%.o,$(SOURCE_FILES))
@@ -39,10 +40,10 @@ all: ${MAIN}
 	${MAIN}
 
 ${MAIN}: ${OBJECT_FILES}
-	g++ -o $@ $^ ${LINK_PATH} ${LINK_LIBS}
+	g++ -o $@ $^ ${LINK_LIBS} ${LINK_PATH} 
 
 %.o: %.cpp
-	gcc -g ${CFLAGS} ${CPPFLAGS} ${C_INCLUDE_PATH} $< -o $@ ${LINK_PATH} ${LINK_LIBS}
+	gcc -g ${CFLAGS} ${CPPFLAGS} ${C_INCLUDE_PATH} $< -o $@ ${LINK_LIBS} ${LINK_PATH} 
 
 .PHONY: clean
 clean:

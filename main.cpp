@@ -4,6 +4,7 @@
 #include "local_signal.h"
 #include "curl_main.h"
 #include "main_sort.h"
+#include "main_sqlite3.h"
 
 static void main_program_enter();
 static void main_program_leave();
@@ -14,11 +15,12 @@ static void main_signal_test();
 int main(int argc, char **argv)
 {
 	main_program_enter();
-	main_signal_test();
+	// main_signal_test();
 	// curl_main_test();
-	main_sort_test();
+	// main_sort_test();
+	main_sqlite3_test();
 
-	printf("Hello world\n");
+	// printf("Hello world\n");
 	main_program_leave();
 	return EXIT_SUCCESS;
 }
