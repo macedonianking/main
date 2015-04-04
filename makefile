@@ -35,6 +35,7 @@ LINK_LIBS		:= ${CURL_LINK_FLAG}
 
 .PHONY: all
 all: ${MAIN}
+	${MAIN}
 
 ${MAIN}: ${OBJECT_FILES}
 	g++ -o $@ $^ ${LINK_PATH} ${LINK_LIBS}

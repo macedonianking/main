@@ -60,4 +60,19 @@ void main_buffer_find_max_and_min(int *ptr, int n, int *min, int *max);
  */
 const char* main_find_maximum_word(const char *str, int *outN);
 
+/**
+ * 寻找最大连续字数组，使用穷举法
+ *
+ * @param l, r, v: out value
+ * @return
+ */
+void main_find_maximum_linear_subarray_normal(const int *ptr, int n, int *l, int *r, int *v);
+
+/**
+ * 寻找最大连续字数组，使用分治法
+ */
+void main_find_maximum_linear_subarray_divide(const int *ptr, int n, int *l, int *r, int *v);
+
+int* main_random_integer_buffer(int n, int s, int e);
+
 #endif // MAIN_SORT_H

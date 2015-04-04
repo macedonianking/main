@@ -3,8 +3,16 @@
 
 #include "main_sort.h"
 
+#include <time.h>
 #include "main_config.h"
 #include "main_print.h"
+
+#define F_MAIN_TEST
+
+// 测试代码声明
+#ifdef F_MAIN_TEST
+static void main_test_find_maximum_linear_buffer();
+#endif // F_MAIN_TEST
 
 void main_money_find_test();
 
@@ -37,6 +45,11 @@ void main_sort_test()
 		fwrite(str, n, 1, stdout);
 		fputc('\n', stdout);
 	}
+
+	// 测试代码调用
+	#ifdef F_MAIN_TEST
+	main_test_find_maximum_linear_buffer();
+	#endif
 }
 
 int *main_binary_search(int *ptr, int n, int v)
@@ -543,3 +556,221 @@ void main_sort_divide_merge(int *ptr, int n)
 		}
 	}
 }
+
+void main_find_maximum_linear_subarray_normal(const int *ptr, int n, int *l, int *r, int *v)
+{
+	int i, j;
+	int max, maxL, maxR;
+	int sum;
+
+	*l = *r = -1;
+	*v = 0;
+
+	if (n <= 0)
+	{
+		return;
+	}
+
+	max = ptr[0];
+	maxL = 0;
+	maxR = 1;
+	for (i = 0; i < n; ++i)
+	{
+		sum = ptr[i];
+		j = i + 1;
+		if (max < sum)
+		{
+			max = sum;
+			maxL = i;
+			maxR = j;
+		}
+		else if (max == sum)
+		{
+			if ((j - i) < (maxR - maxL))
+			{
+				maxL = i;
+				maxR = j;
+			}
+		}
+
+		while (j < n)
+		{
+			sum += ptr[j];
+			++j;
+			if (max < sum)
+			{
+				max = sum;
+				maxL = i;
+				maxR = j;
+			}
+			else if (max == sum)
+			{
+				if ((j - i) < (maxR - maxL))
+				{
+					maxL = i;
+					maxR = j;
+				}
+			}
+		}
+	}
+	*l = maxL;
+	*r = maxR;
+	*v = max;
+}
+
+static int main_find_maximum_linear_subarray_divide_impl(int *ptr, int s, int e, int *l, int *r, int *v)
+{
+	int m;
+	int outL, outR, outV;
+	int maxL, maxR, max;
+	int t;
+	int i;
+
+	if (e <= s)
+	{
+		return 1;
+	}
+
+	m = s + (e - s) / 2;
+	maxL = maxR = -1;
+	if (!(main_find_maximum_linear_subarray_divide_impl(ptr, s, m, &outL, &outR, &outV)))
+	{
+		if (maxL == -1 || max < outV)
+		{
+			maxL = outL;
+			maxR = outR;
+			max = outV;
+		}
+	}
+
+	if (!main_find_maximum_linear_subarray_divide_impl(ptr, m + 1, e, &outL, &outR, &outV))
+	{
+		if (maxL == -1 || max < outV)
+		{
+			maxL = outL;
+			maxR = outR;
+			max = outV;
+		}
+	}
+
+	outV = ptr[m];
+	outL = m;
+	outR = m + 1;
+	t = outV;
+	i = outL - 1;
+	while (i >= s)
+	{
+		t += ptr[i];
+		if (outV < t)
+		{
+			outL = i;
+			outV = t;
+		}
+		--i;
+	}
+
+	i = outR;
+	t = outV;
+	while (i < e)
+	{
+		t += ptr[i];
+		++i;
+		if (t > outV)
+		{
+			outR = i;
+			outV = t;
+		}
+	}
+
+	if (maxL == -1 || max < outV)
+	{
+		maxL = outL;
+		maxR = outR;
+		max = outV;
+	}
+
+	*l = maxL;
+	*r = maxR;
+	*v = max;
+	return 0;
+}
+
+/**
+ * 分治法
+ */
+void main_find_maximum_linear_subarray_divide(int *ptr, int n, int *l, int *r, int *v)
+{
+	if (n > 0)
+	{
+		main_find_maximum_linear_subarray_divide_impl(ptr, 0, n, l, r, v);
+	}
+}
+
+int *main_random_integer_buffer(int n, int s, int e)
+{
+	int *ptr;
+	int i;
+	int t;
+
+	if (n <= 0)
+	{
+		return NULL;
+	}
+
+	if (e < s)
+	{
+		t = s;
+		s = e;
+		e = t;
+	} 
+	else if (e == s)
+	{
+		return NULL;
+	}
+
+	ptr = (int*) malloc(sizeof(int) * n);
+	srand((unsigned)time(NULL));
+	for (i = 0; i < n; ++i)
+	{
+		ptr[i] = rand() % (e - s) + s;
+	}
+
+	return ptr;
+}
+
+// 测试代码
+#ifdef F_MAIN_TEST
+
+void main_test_find_maximum_linear_buffer()
+{
+	int *ptr;
+	int l, r, v;
+
+	if (!(ptr = main_random_integer_buffer(10, -5, 5)))
+	{
+		return;
+	}
+
+	main_print_int_buffer(ptr, 10);
+	main_find_maximum_linear_subarray_normal(ptr, 10, &l, &r, &v);
+	if (l != -1 && r != -1)
+	{
+		fprintf(stdout, "normal:l=%d, r=%d, v=%d\n", l, r, v);
+	}
+
+	l = r = -1;
+	main_find_maximum_linear_subarray_divide(ptr, 10, &l, &r, &v);
+	if (l != -1 && r != -1)
+	{
+		fprintf(stdout, "divide:l=%d, r=%d, v=%d\n", l, r, v);
+	}
+	else
+	{
+		fprintf(stdout, "failure\n");
+	}
+
+	free(ptr);
+	ptr = NULL;
+}
+
+#endif // F_MAIN_TEST
