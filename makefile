@@ -1,5 +1,6 @@
 ifeq (${OS},Windows_NT)
-MAIN	:= main.exe
+MAIN		:= main.exe
+LINK_PATH	:= -L.
 else
 MAIN	:= main
 endif
@@ -30,8 +31,8 @@ OBJECT_FILES	:= $(patsubst %.cpp,%.o,$(SOURCE_FILES))
 CFLAGS			:= -c -g -std=c++0x -Wunused-variable
 CPPFLAGS		:= ${CURL_D_FLAG}
 C_INCLUDE_PATH	:= ${CURL_INCLUDE_PATH}
-LINK_PATH		:= ${CURL_LIB_PATH}
-LINK_LIBS		:= ${CURL_LINK_FLAG}
+LINK_PATH		+= ${CURL_LIB_PATH}
+LINK_LIBS		+= ${CURL_LINK_FLAG} -lsqlite3
 
 .PHONY: all
 all: ${MAIN}
