@@ -6,6 +6,7 @@
 #include "main_sort.h"
 #include "main_sqlite3.h"
 #include "main_string_builder.h"
+#include "main_solutions.h"
 
 static void main_program_enter();
 static void main_program_leave();
@@ -21,6 +22,7 @@ int main(int argc, char **argv)
 	// main_sort_test();
 	main_sqlite3_test();
 	// main_string_builder_test();
+	// main_solutions_run();
 
 	// printf("Hello world\n");
 	main_program_leave();
