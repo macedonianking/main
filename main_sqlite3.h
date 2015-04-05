@@ -25,6 +25,21 @@ struct main_sqlite3_common_data
 	};
 };
 
+struct main_sqlite3_open_helper
+{
+	int				version;
+	const char 		*name;
+	void 			(*on_create)(struct main_sqlite3_open_helper *helper, sqlite3 *db);
+	void 			(*on_upgrade)(struct main_sqlite3_open_helper *helper, sqlite3 *db, int old_version, int new_version);
+	void 			(*on_downgrade)(struct main_sqlite3_open_helper *helper, sqlite3 *db, int old_version, int new_version);
+	sqlite3			*db;
+};
+
 void main_sqlite3_test();
+
+void main_sqlite3_enter();
+void main_sqlite3_leave();
+
+int  main_sqlite3_open(struct main_sqlite3_open_helper *helper);
 
 #endif // MAIN_SQLITE_H
