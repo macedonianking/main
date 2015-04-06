@@ -10,6 +10,14 @@
 #define NAME_SQLITE3_DB				"test.db"
 #define SQLTIE3_DB_VERSION 			1
 
+struct main_sqlite3_statement
+{
+	sqlite3			*db;
+	sqlite3_stmt 	*stmt;
+	const char 		*sql;
+	int 			rc;
+};
+
 static void main_sqlite3_test_open();
 static void main_sqlite3_test_close();
 static void main_sqlite3_test_impl();
@@ -24,6 +32,10 @@ static int 	main_sqlite3_common_callback(void *data, int argc, char **argv, char
 static void main_sqlite3_open_helper_on_create(struct main_sqlite3_open_helper *helper, sqlite3 *db);
 static void main_sqlite3_open_helper_on_upgrade(struct main_sqlite3_open_helper *helper, sqlite3 *db, int old_verson, int new_version);
 static void main_sqlite3_open_helper_on_downgrade(struct main_sqlite3_open_helper *helper, sqlite3 *db,int old_verson, int new_version);
+
+static void main_sqlite3_stmt_acquire(struct main_sqlite3_statement *stmt);
+static void main_sqlite3_stmt_release(struct main_sqlite3_statement *stmt);
+static int  main_sqlite3_stmt_get_int(struct main_sqlite3_statement *stmt, int i);
 
 static main_sqlite3_open_helper *gHelper = NULL;
 
@@ -329,8 +341,14 @@ void main_sqlite3_test_impl()
 		return;
 	}
 
+	main_sqlite3_execute(gHelper->db, "PRAGMA temp_store = MEMORY;");
 	main_sqlite3_test_insert(gHelper->db);
 	main_sqlite3_test_search(gHelper->db);
+
+	if (main_sqlite3_table_exists(gHelper->db, "tbl_user") != 0)
+	{
+		fprintf(stderr, "%s not exists\n", "tbl_user");
+	}
 }
 
 void main_sqlite3_test_insert(sqlite3 *db)
@@ -413,4 +431,63 @@ void main_sqlite3_test_search(sqlite3 *db)
 FINISH:
 	sqlite3_finalize(stmt);
 	stmt = NULL;
+}
+
+int main_sqlite3_execute(sqlite3 *db, const char *sql)
+{
+	int rc;
+
+	rc = sqlite3_exec(db, sql, NULL, NULL, NULL);
+	return rc == SQLITE_OK ? 0 : 1;
+}
+
+int main_sqlite3_table_exists(sqlite3 *db, const char *tbl_name)
+{
+	struct main_sqlite3_statement stmt;
+	char buffer[1024];
+	int r;
+
+	if (!db)
+	{
+		return 1;
+	}
+
+	snprintf(buffer, 1024, "SELECT * FROM sqlite_master WHERE type='table' AND name='%s'", tbl_name);
+	memset(&stmt, 0, sizeof(stmt));
+	stmt.db = db;
+	stmt.sql = buffer;
+
+	main_sqlite3_stmt_acquire(&stmt);
+	if (stmt.rc != SQLITE_OK) 
+	{
+		main_sqlite3_stmt_release(&stmt);
+		return 1;
+	}
+
+	r = SQLITE_ROW == sqlite3_step(stmt.stmt) ? 0 : 1;
+	main_sqlite3_stmt_release(&stmt);
+	return r;
+}
+
+void main_sqlite3_stmt_acquire(struct main_sqlite3_statement *stmt)
+{
+	if (!stmt) 
+		return;
+
+	stmt->rc = sqlite3_prepare_v2(stmt->db, stmt->sql, -1, &stmt->stmt, NULL);
+	if (stmt->rc != SQLITE_OK) 
+	{
+		sqlite3_finalize(stmt->stmt);
+		stmt->stmt = NULL;
+	}
+}
+
+void main_sqlite3_stmt_release(struct main_sqlite3_statement *stmt)
+{
+	if (stmt && stmt->stmt) 
+	{
+		sqlite3_finalize(stmt->stmt);
+		stmt->stmt = NULL;
+	}
+	stmt->rc = SQLITE_OK;
 }

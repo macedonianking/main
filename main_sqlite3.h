@@ -42,4 +42,16 @@ void main_sqlite3_leave();
 
 int  main_sqlite3_open(struct main_sqlite3_open_helper *helper);
 
+/**
+ * @return 0 for success
+ *         1 for failure
+ */
+int	 main_sqlite3_execute(sqlite3 *db, const char *sql);
+
+/**
+ * @return 0 for success
+ * 		   1 for failure
+ */
+int  main_sqlite3_table_exists(sqlite3 *db, const char *tbl_name);
+
 #endif // MAIN_SQLITE_H
