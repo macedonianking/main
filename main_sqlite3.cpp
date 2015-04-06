@@ -14,6 +14,7 @@ static void main_sqlite3_test_open();
 static void main_sqlite3_test_close();
 static void main_sqlite3_test_impl();
 static void main_sqlite3_test_insert(sqlite3 *db);
+static void main_sqlite3_test_search(sqlite3 *db);
 
 static int 	main_sqlite3_test_open_callback(void *data, int argc, char **argv, char **names);
 static int 	main_sqlite3_get_database_version(sqlite3 *db);
@@ -329,6 +330,7 @@ void main_sqlite3_test_impl()
 	}
 
 	main_sqlite3_test_insert(gHelper->db);
+	main_sqlite3_test_search(gHelper->db);
 }
 
 void main_sqlite3_test_insert(sqlite3 *db)
@@ -349,6 +351,63 @@ void main_sqlite3_test_insert(sqlite3 *db)
 	if (rc != SQLITE_DONE) {
 		fprintf(stderr, "sqlite3_step failure\n");
 		goto FINISH;
+	}
+
+FINISH:
+	sqlite3_finalize(stmt);
+	stmt = NULL;
+}
+
+void main_sqlite3_test_search(sqlite3 *db)
+{
+	sqlite3_stmt *stmt;
+	int rc;
+	int i, n;
+	int type;
+	const unsigned char *text;
+
+	stmt = NULL;
+	rc = sqlite3_prepare_v2(db, "SELECT * FROM tbl_user", -1, &stmt, NULL);
+	if (rc != SQLITE_OK) {
+		goto FINISH;
+	}
+
+	n = sqlite3_column_count(stmt);
+	for (i = 0; i < n; ++i)
+	{
+		fprintf(stdout, "%s\t", sqlite3_column_name(stmt, i));
+	}
+	fprintf(stdout, "\n");
+	while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+		for (i = 0; i < n; ++i) {
+			type = sqlite3_column_type(stmt, i);
+			switch(type) 
+			{
+				case SQLITE_INTEGER:
+				{
+					fprintf(stdout, "%d\t", sqlite3_column_int(stmt, i));
+					break;
+				}
+				case SQLITE_TEXT: 
+				{
+					text = sqlite3_column_text(stmt, i);
+					if (text) 
+					{
+						fprintf(stdout, "%s\t", text);
+					}
+					else 
+					{
+						fprintf(stdout, "%s\n", "NULL");
+					}
+					break;
+				}
+				default:
+				{
+					break;
+				}
+			}
+		}
+		fprintf(stdout, "\n");
 	}
 
 FINISH:
