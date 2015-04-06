@@ -12,6 +12,9 @@
 
 static void main_sqlite3_test_open();
 static void main_sqlite3_test_close();
+static void main_sqlite3_test_impl();
+static void main_sqlite3_test_insert(sqlite3 *db);
+
 static int 	main_sqlite3_test_open_callback(void *data, int argc, char **argv, char **names);
 static int 	main_sqlite3_get_database_version(sqlite3 *db);
 static void main_sqlite3_set_database_version(sqlite3 *db, int new_version);
@@ -25,7 +28,13 @@ static main_sqlite3_open_helper *gHelper = NULL;
 
 void main_sqlite3_test()
 {
+	// constructor
 	main_sqlite3_enter();
+
+	// run command
+	main_sqlite3_test_impl();
+
+	// destructor
 	main_sqlite3_leave();
 }
 
@@ -310,4 +319,39 @@ void main_sqlite3_open_helper_on_downgrade(	struct main_sqlite3_open_helper *hel
 {
 	sqlite3_exec(db, "DROP TABLE IF EXISTS tbl_user;", NULL, NULL, NULL);
 	helper->on_create(helper, db);
+}
+
+void main_sqlite3_test_impl()
+{
+	if (!gHelper || !gHelper->db)
+	{
+		return;
+	}
+
+	main_sqlite3_test_insert(gHelper->db);
+}
+
+void main_sqlite3_test_insert(sqlite3 *db)
+{
+	sqlite3_stmt *stmt;
+	int rc;
+
+	stmt = NULL;
+	rc = sqlite3_prepare_v2(db, "INSERT INTO tbl_user(name, email) VALUES(?, ?)", -1, &stmt, NULL);
+	if (rc != SQLITE_OK) {
+		fprintf(stderr, "sqltie3_prepare_v2 failure\n");
+		goto FINISH;
+	}
+
+	sqlite3_bind_text(stmt, 1, "LiHongbing", -1, NULL);
+	sqlite3_bind_text(stmt, 2, "207462624@qq.com", -1, NULL);
+	rc = sqlite3_step(stmt);
+	if (rc != SQLITE_DONE) {
+		fprintf(stderr, "sqlite3_step failure\n");
+		goto FINISH;
+	}
+
+FINISH:
+	sqlite3_finalize(stmt);
+	stmt = NULL;
 }
