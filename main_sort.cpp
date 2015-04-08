@@ -760,7 +760,7 @@ void main_find_maximum_linear_subarray_literal(const int *ptr, int n, int *l, in
 		iterR = i + 1;
 		iterS = ptr[i];
 		v = iterS;
-		for (j = i - 1; j >= 0; --j)
+		for (j = i - 1; j >= outL; --j)
 		{
 			v += ptr[j];
 			if (iterS < v)
