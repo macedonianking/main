@@ -23,6 +23,7 @@ static void main_sqlite3_test_close();
 static void main_sqlite3_test_impl();
 static void main_sqlite3_test_insert(sqlite3 *db);
 static void main_sqlite3_test_search(sqlite3 *db);
+static void main_sqlite3_test_api(sqlite3 *db);
 
 static int 	main_sqlite3_test_open_callback(void *data, int argc, char **argv, char **names);
 static int 	main_sqlite3_get_database_version(sqlite3 *db);
@@ -342,13 +343,14 @@ void main_sqlite3_test_impl()
 	}
 
 	main_sqlite3_execute(gHelper->db, "PRAGMA temp_store = MEMORY;");
-	main_sqlite3_test_insert(gHelper->db);
+	// main_sqlite3_test_insert(gHelper->db);
 	main_sqlite3_test_search(gHelper->db);
 
 	if (main_sqlite3_table_exists(gHelper->db, "tbl_user") != 0)
 	{
 		fprintf(stderr, "%s not exists\n", "tbl_user");
 	}
+	main_sqlite3_test_api(gHelper->db);
 }
 
 void main_sqlite3_test_insert(sqlite3 *db)
@@ -490,4 +492,34 @@ void main_sqlite3_stmt_release(struct main_sqlite3_statement *stmt)
 		stmt->stmt = NULL;
 	}
 	stmt->rc = SQLITE_OK;
+}
+
+static void main_sqlite3_test_bind_parameters(sqlite3 *db);
+
+void main_sqlite3_test_api(sqlite3 *db)
+{
+	main_sqlite3_test_bind_parameters(db);
+}
+
+
+void main_sqlite3_test_bind_parameters(sqlite3 *db)
+{
+	sqlite3_stmt *stmt;
+	int rc;
+	int n;
+	int i;
+	const char *name;
+
+	rc = sqlite3_prepare_v2(db, "SELECT * FROM tbl_user WHERE name=@name", -1, &stmt, NULL);
+	if (rc != SQLITE_OK) 
+	{
+		goto FINISH;
+	}
+
+	i = sqlite3_bind_parameter_index(stmt, "@name");
+	fprintf(stdout, "%s=%d\n", "@name", i);
+
+FINISH:
+	sqlite3_finalize(stmt);
+	stmt = NULL;
 }
