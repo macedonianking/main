@@ -738,6 +738,51 @@ int *main_random_integer_buffer(int n, int s, int e)
 	return ptr;
 }
 
+void main_find_maximum_linear_subarray_literal(const int *ptr, int n, int *l, int *r, int *s)
+{
+	int outL, outR, outS;
+	int iterL, iterR, iterS;
+	int v;
+	int i, j;
+
+	if (n <= 0) 
+	{
+		return; 
+	}
+
+	outL = 0;
+	outR = 1;
+	outS = ptr[0];
+
+	for (i = 1; i < n; ++i)
+	{
+		iterL = i;
+		iterR = i + 1;
+		iterS = ptr[i];
+		v = iterS;
+		for (j = i - 1; j >= 0; --j)
+		{
+			v += ptr[j];
+			if (iterS < v)
+			{
+				iterS = v;
+				iterL = j;
+			}
+		}
+
+		if (outS < iterS)
+		{
+			outS = iterS;
+			outL = iterL;
+			outR = iterR;
+		}
+	}
+
+	*l = outL;
+	*r = outR;
+	*s = outS;
+}
+
 // 测试代码
 #ifdef F_MAIN_TEST
 
@@ -767,6 +812,17 @@ void main_test_find_maximum_linear_buffer()
 	else
 	{
 		fprintf(stdout, "failure\n");
+	}
+
+	l = r = -1;
+	main_find_maximum_linear_subarray_literal(ptr, 10, &l, &r, &v);
+	if (l != -1 && r != -1)
+	{
+		fprintf(stdout, "literal:l=%d, r=%d, v=%d\n", l, r, v);
+	}
+	else
+	{
+		fprintf(stderr, "literal failure");
 	}
 
 	free(ptr);

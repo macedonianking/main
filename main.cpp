@@ -19,8 +19,8 @@ int main(int argc, char **argv)
 	main_program_enter();
 	// main_signal_test();
 	// curl_main_test();
-	// main_sort_test();
-	main_sqlite3_test();
+	main_sort_test();
+	// main_sqlite3_test();
 	// main_string_builder_test();
 	// main_solutions_run();
 

@@ -73,6 +73,11 @@ void main_find_maximum_linear_subarray_normal(const int *ptr, int n, int *l, int
  */
 void main_find_maximum_linear_subarray_divide(const int *ptr, int n, int *l, int *r, int *v);
 
+/**
+ * 寻找最大连续字数组，使用迭代法(算法复杂度:Omega(n))
+ */
+void main_find_maximum_linear_subarray_literal(const int *ptr, int n, int *l, int *r, int *v);
+
 int* main_random_integer_buffer(int n, int s, int e);
 
 #endif // MAIN_SORT_H
