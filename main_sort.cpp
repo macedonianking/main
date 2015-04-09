@@ -12,6 +12,7 @@
 // 测试代码声明
 #ifdef F_MAIN_TEST
 static void main_test_find_maximum_linear_buffer();
+static void main_test_heap_sort();
 #endif // F_MAIN_TEST
 
 void main_money_find_test();
@@ -49,6 +50,7 @@ void main_sort_test()
 	// 测试代码调用
 	#ifdef F_MAIN_TEST
 	main_test_find_maximum_linear_buffer();
+	main_test_heap_sort();
 	#endif
 }
 
@@ -829,4 +831,57 @@ void main_test_find_maximum_linear_buffer()
 	ptr = NULL;
 }
 
+#endif // F_MAIN_TEST
+
+static int main_is_maximum_heap_recursive(int *ptr, int n, int i)
+{
+	int j;
+
+	if (n < i)
+	{
+		return 0;
+	}
+
+	j = i * 2 + 1;
+	if (j < n)
+	{
+		if (ptr [i] < ptr[j] || main_is_maximum_heap_recursive(ptr, n, j) != 0) 
+		{
+			return 1;
+		}
+	}
+
+	j += 1;
+	if (j < n)
+	{
+		if (ptr [i] < ptr[j] || main_is_maximum_heap_recursive(ptr, n, j) != 0) 
+		{
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+int main_is_maximum_heap(int *ptr, int n)
+{
+	return main_is_maximum_heap_recursive(ptr, n, 0);
+}
+
+#ifdef F_MAIN_TEST
+void main_test_heap_sort()
+{
+	int buffer0[] = {23, 17, 14, 6, 13, 10, 1, 5, 7, 12};
+	int n;
+
+	n = main_is_maximum_heap(buffer0, ARRAY_SIZE(buffer0));
+	if (n == 0)
+	{
+		fprintf(stdout, "buffer0 is maximum heap\n");
+	}
+	else
+	{
+		fprintf(stdout, "buffer0 is not maximum heap\n");
+	}
+}
 #endif // F_MAIN_TEST

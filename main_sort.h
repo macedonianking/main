@@ -80,4 +80,6 @@ void main_find_maximum_linear_subarray_literal(const int *ptr, int n, int *l, in
 
 int* main_random_integer_buffer(int n, int s, int e);
 
+int  main_is_maximum_heap(int *ptr, int n);
+
 #endif // MAIN_SORT_H
