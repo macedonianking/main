@@ -78,8 +78,31 @@ void main_find_maximum_linear_subarray_divide(const int *ptr, int n, int *l, int
  */
 void main_find_maximum_linear_subarray_literal(const int *ptr, int n, int *l, int *r, int *v);
 
-int* main_random_integer_buffer(int n, int s, int e);
-
 int  main_is_maximum_heap(int *ptr, int n);
+int  main_is_maximum_heap(int *ptr, int n);
+
+/**
+ * 使用递归形式的代码
+ */
+void main_max_heapify(int *ptr, int n, int i);
+void main_min_heapify(int *ptr, int n, int i);
+
+/**
+ * 使用循环形式的代码
+ */
+void main_max_heapify_iter(int *ptr, int n, int i);
+void main_min_heapify_iter(int *ptr, int n, int i);
+
+/**
+ * 构建最大堆，最小堆
+ */
+void main_build_max_heapify(int *ptr, int n);
+void main_build_min_heapify(int *ptr, int n);
+
+/**
+ * 堆排序，将根节点与最后节点互换，然后执行main_maximum_heapify
+ * 维护最大堆的属性
+ */
+void main_heap_sort(int *ptr, int n);
 
 #endif // MAIN_SORT_H

@@ -506,9 +506,7 @@ void main_sqlite3_test_bind_parameters(sqlite3 *db)
 {
 	sqlite3_stmt *stmt;
 	int rc;
-	int n;
 	int i;
-	const char *name;
 
 	rc = sqlite3_prepare_v2(db, "SELECT * FROM tbl_user WHERE name=@name", -1, &stmt, NULL);
 	if (rc != SQLITE_OK) 

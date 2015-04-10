@@ -11,4 +11,6 @@
 #define TYPE_DOUBLE			0x0006
 #define TYPE_TEXT			0x0007
 
+int *main_random_integer_buffer(int n, int s, int e);
+
 #endif // MAIN_UTILS_H

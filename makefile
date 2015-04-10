@@ -26,6 +26,7 @@ SOURCE_FILES	:= 	main.cpp \
 					main_sqlite3.cpp \
 					main_string_builder.cpp \
 					main_solutions.cpp \
+					main_utils.cpp \
 					main_print.cpp ${CURL_SOURCE_FILES}
 
 OBJECT_FILES	:= $(patsubst %.cpp,%.o,$(SOURCE_FILES))

@@ -6,6 +6,7 @@
 #include <time.h>
 #include "main_config.h"
 #include "main_print.h"
+#include "main_utils.h"
 
 #define F_MAIN_TEST
 
@@ -708,38 +709,6 @@ void main_find_maximum_linear_subarray_divide(int *ptr, int n, int *l, int *r, i
 	}
 }
 
-int *main_random_integer_buffer(int n, int s, int e)
-{
-	int *ptr;
-	int i;
-	int t;
-
-	if (n <= 0)
-	{
-		return NULL;
-	}
-
-	if (e < s)
-	{
-		t = s;
-		s = e;
-		e = t;
-	} 
-	else if (e == s)
-	{
-		return NULL;
-	}
-
-	ptr = (int*) malloc(sizeof(int) * n);
-	srand((unsigned)time(NULL));
-	for (i = 0; i < n; ++i)
-	{
-		ptr[i] = rand() % (e - s) + s;
-	}
-
-	return ptr;
-}
-
 void main_find_maximum_linear_subarray_literal(const int *ptr, int n, int *l, int *r, int *s)
 {
 	int outL, outR, outS;
@@ -868,11 +837,167 @@ int main_is_maximum_heap(int *ptr, int n)
 	return main_is_maximum_heap_recursive(ptr, n, 0);
 }
 
+int main_is_minimum_heap(int *ptr, int n)
+{
+	int limit;
+	int i;
+	int l, r;
+
+	limit = n >> 1;
+	for (i = 0; i < limit; ++i)
+	{
+		l =	(i << 1) + 1;
+		r = l + 1;
+		if (l < n && ptr[i] > ptr[l])
+		{
+			return 1;
+		}
+
+		if (r < n && ptr[i] > ptr[r])
+		{
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+void main_max_heapify(int *ptr, int n, int i)
+{
+	int l, r;
+	int max;
+	int t;
+
+	max = i;
+	l = 2 * i + 1;
+	r = l + 1;
+	if (l < n && ptr[max] < ptr[l])
+	{
+		max = l;
+	}
+
+	if (r < n && ptr[max] < ptr[r])
+	{
+		max = r;
+	}
+
+	if (max != i)
+	{
+		t = ptr[i];
+		ptr[i] = ptr[max];
+		ptr[max] = t;
+		main_max_heapify(ptr, n, max);
+	}
+}
+
+void main_min_heapify(int *ptr, int n, int i)
+{
+	int l, r;
+	int min;
+	int t;
+
+	min = i;
+	l = (i << 1) + 1;
+	r = l + 1;
+	if (l < n && ptr[l] < ptr[min])
+	{
+		min = l;
+	}
+
+	if (r < n && ptr[r] < ptr[min])
+	{
+		min = r;
+	}
+
+	if (min != i)
+	{
+		t = ptr[min];
+		ptr[min] = ptr[i];
+		ptr[i] = t;
+		main_min_heapify(ptr, n, min);
+	}
+}
+
+void main_max_heapify_iter(int *ptr, int n, int i)
+{
+	int l, r;
+	int max;
+	int t;
+
+	while (true)
+	{
+		max = i;
+		l = (i << 1) + 1;
+		r = l + 1;
+		if (l < n && ptr[max] < ptr[l])
+		{
+			max = l;
+		}
+
+		if (r < n && ptr[max] < ptr[r])
+		{
+			max = r;
+		}
+
+		if (max == i)
+		{
+			break;
+		}
+		else
+		{
+			t = ptr[i];
+			ptr[i] = ptr[max];
+			ptr[max] = t;
+		}
+	}
+}
+
+void main_min_heapify_iter(int *ptr, int n, int i)
+{
+	int l, r;
+	int min;
+	int t;
+
+	while (true)
+	{
+		min = i;
+		l = (i << 1) + 1;
+		r = l + 1;
+		if (l < n && ptr[l] < ptr[min])
+		{
+			min = l;
+		}
+
+		if (r < n && ptr[r] < ptr[min])
+		{
+			min = r;
+		}
+
+		if (min == i)
+		{
+			break;
+		}
+		else
+		{
+			t = ptr[i];
+			ptr[i] = ptr[min];
+			ptr[min] = t;
+		}
+	}
+}
+
 #ifdef F_MAIN_TEST
+#define F_MAIN_TEST_BUFFER_SIZE	10
+#define F_MAIN_TEST_BUFFER_FM	-10
+#define F_MAIN_TEST_BUFFER_TO	10
+
 void main_test_heap_sort()
 {
 	int buffer0[] = {23, 17, 14, 6, 13, 10, 1, 5, 7, 12};
+	int buffer1[] = {27, 17, 3, 16, 13, 10, 1, 5, 7, 12,
+					 4, 8, 9, 0};
 	int n;
+	int *buffer;
 
 	n = main_is_maximum_heap(buffer0, ARRAY_SIZE(buffer0));
 	if (n == 0)
@@ -883,5 +1008,93 @@ void main_test_heap_sort()
 	{
 		fprintf(stdout, "buffer0 is not maximum heap\n");
 	}
+	main_max_heapify(buffer1, ARRAY_SIZE(buffer1), 2);
+	n = main_is_maximum_heap(buffer1, ARRAY_SIZE(buffer1));
+	if (n == 0)
+	{
+		fprintf(stdout, "buffer1 is maximum heap\n");
+	}
+	else
+	{
+		fprintf(stdout, "buffer1 is not maximum heap\n");
+	}
+
+	buffer = main_random_integer_buffer(F_MAIN_TEST_BUFFER_SIZE, 
+										F_MAIN_TEST_BUFFER_FM,
+										F_MAIN_TEST_BUFFER_TO);
+	main_build_max_heapify(buffer, F_MAIN_TEST_BUFFER_SIZE);
+	n = main_is_maximum_heap(buffer, F_MAIN_TEST_BUFFER_SIZE);
+	if (n == 0)
+	{
+		fprintf(stdout, "buffer is maximum heap\n");
+	}
+	else
+	{
+		fprintf(stdout, "buffer is not maximum heap\n");
+	}
+
+	main_build_min_heapify(buffer, F_MAIN_TEST_BUFFER_SIZE);
+	n = main_is_minimum_heap(buffer, F_MAIN_TEST_BUFFER_SIZE);
+	if (n == 0)
+	{
+		fprintf(stdout, "buffer is minimum heap\n");
+	}
+	else
+	{
+		fprintf(stdout, "buffer is not minimum heap\n");
+	}
+
+	main_heap_sort(buffer, F_MAIN_TEST_BUFFER_SIZE);
+	fprintf(stdout, "Heap sort:\n");
+	main_print_int_buffer(buffer, F_MAIN_TEST_BUFFER_SIZE);
+
+	delete buffer;
+	buffer = NULL;
 }
 #endif // F_MAIN_TEST
+
+void main_build_max_heapify(int *ptr, int n)
+{
+	int i;
+	int m;
+
+	m = n >> 1;
+	for (i = m; i >= 0; --i)
+	{
+		main_max_heapify(ptr, n, i);
+	}
+}
+
+void main_build_min_heapify(int *ptr, int n)
+{
+	int i;
+	int m;
+
+	m = n >> 1;
+	for (i = m; i >= 0; --i)
+	{
+		main_min_heapify(ptr, n, i);
+	}
+}
+
+void main_heap_sort(int *ptr, int n)
+{
+	int i;
+	int t;
+
+	/**
+	 * 构建最大堆
+	 */
+	main_build_max_heapify(ptr, n);
+	for (i = n - 1; i > 0; --i)
+	{
+		t = ptr[i];
+		ptr[i] = ptr[0];
+		ptr[0] = t;
+
+		/**
+		 * 维护最大堆的性质
+		 */
+		main_max_heapify(ptr, i, 0);
+	}
+}
