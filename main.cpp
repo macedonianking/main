@@ -7,6 +7,7 @@
 #include "main_sqlite3.h"
 #include "main_string_builder.h"
 #include "main_solutions.h"
+#include "main_priority_queue.h"
 
 static void main_program_enter();
 static void main_program_leave();
@@ -19,7 +20,8 @@ int main(int argc, char **argv)
 	main_program_enter();
 	// main_signal_test();
 	// curl_main_test();
-	main_sort_test();
+	// main_sort_test();
+	main_priority_queue_test();
 	// main_sqlite3_test();
 	// main_string_builder_test();
 	// main_solutions_run();

@@ -24,6 +24,7 @@ static void main_sqlite3_test_impl();
 static void main_sqlite3_test_insert(sqlite3 *db);
 static void main_sqlite3_test_search(sqlite3 *db);
 static void main_sqlite3_test_api(sqlite3 *db);
+static void main_sqlite3_test_print_result(sqlite3_stmt *stmt);
 
 static int 	main_sqlite3_test_open_callback(void *data, int argc, char **argv, char **names);
 static int 	main_sqlite3_get_database_version(sqlite3 *db);
@@ -382,9 +383,6 @@ void main_sqlite3_test_search(sqlite3 *db)
 {
 	sqlite3_stmt *stmt;
 	int rc;
-	int i, n;
-	int type;
-	const unsigned char *text;
 
 	stmt = NULL;
 	rc = sqlite3_prepare_v2(db, "SELECT * FROM tbl_user", -1, &stmt, NULL);
@@ -392,42 +390,10 @@ void main_sqlite3_test_search(sqlite3 *db)
 		goto FINISH;
 	}
 
-	n = sqlite3_column_count(stmt);
-	for (i = 0; i < n; ++i)
+	rc = sqlite3_step(stmt);
+	if (rc == SQLITE_ROW)
 	{
-		fprintf(stdout, "%s\t", sqlite3_column_name(stmt, i));
-	}
-	fprintf(stdout, "\n");
-	while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
-		for (i = 0; i < n; ++i) {
-			type = sqlite3_column_type(stmt, i);
-			switch(type) 
-			{
-				case SQLITE_INTEGER:
-				{
-					fprintf(stdout, "%d\t", sqlite3_column_int(stmt, i));
-					break;
-				}
-				case SQLITE_TEXT: 
-				{
-					text = sqlite3_column_text(stmt, i);
-					if (text) 
-					{
-						fprintf(stdout, "%s\t", text);
-					}
-					else 
-					{
-						fprintf(stdout, "%s\n", "NULL");
-					}
-					break;
-				}
-				default:
-				{
-					break;
-				}
-			}
-		}
-		fprintf(stdout, "\n");
+		main_sqlite3_test_print_result(stmt);
 	}
 
 FINISH:
@@ -495,6 +461,7 @@ void main_sqlite3_stmt_release(struct main_sqlite3_statement *stmt)
 }
 
 static void main_sqlite3_test_bind_parameters(sqlite3 *db);
+static void main_sqlite3_test_insert_user_data(sqlite3 *db, const char *name, const char *email);
 
 void main_sqlite3_test_api(sqlite3 *db)
 {
@@ -515,9 +482,137 @@ void main_sqlite3_test_bind_parameters(sqlite3 *db)
 	}
 
 	i = sqlite3_bind_parameter_index(stmt, "@name");
+	if(i == -1)
+	{
+		goto FINISH;
+	}
 	fprintf(stdout, "%s=%d\n", "@name", i);
+	rc = sqlite3_bind_text(stmt, i, "LiHongbing", -1, NULL);
+	if (rc != SQLITE_OK) 
+	{
+		goto FINISH;
+	}
+
+	rc = sqlite3_step(stmt);
+	fprintf(stdout, "Result for %s:\n", "LiHongbing");
+	if (rc == SQLITE_ROW)
+	{
+		main_sqlite3_test_print_result(stmt);
+	}
+
+	sqlite3_reset(stmt);
+	sqlite3_bind_text(stmt, i, "LiHongxing", -1, NULL);
+	rc = sqlite3_step(stmt);
+	fprintf(stdout, "Result for %s:\n", "LiHongxing");
+	if (rc == SQLITE_ROW)
+	{
+		main_sqlite3_test_print_result(stmt);
+	}
+	else
+	{
+		main_sqlite3_test_insert_user_data(db, "LiHongxing", "838240409@qq.com");
+	}
 
 FINISH:
 	sqlite3_finalize(stmt);
 	stmt = NULL;
+}
+
+void main_sqlite3_test_insert_user_data(sqlite3 *db, const char *name, const char *email)
+{
+	sqlite3_stmt *stmt;
+	int rc;
+	const char *zErrMsg;
+	int iName, iEmail;
+
+	rc = sqlite3_prepare_v2(db, "INSERT INTO tbl_user(name, email) VALUES(@name, @email)", 
+		 					-1, &stmt, &zErrMsg);
+	if (rc != SQLITE_OK)
+	{
+		fprintf(stdout, "sqlite3_prepare_v2 failure:%s\n", zErrMsg);
+		goto FINISH;
+	}
+
+	iName = sqlite3_bind_parameter_index(stmt, "@name");
+	iEmail = sqlite3_bind_parameter_index(stmt, "@email");
+	if (iName == -1 || iEmail == -1)
+	{
+		goto FINISH;
+	}
+
+	sqlite3_bind_text(stmt, iName, name, -1, NULL);
+	sqlite3_bind_text(stmt, iEmail, email, -1, NULL);
+	rc = sqlite3_step(stmt);
+	if (rc != SQLITE_DONE)
+	{
+		goto FINISH;
+	}
+
+FINISH:
+	sqlite3_finalize(stmt);
+	stmt = NULL;
+}
+
+void main_sqlite3_test_print_result(sqlite3_stmt *stmt)
+{
+	int type;
+	int n;
+	const char *name;
+	const unsigned char *value;
+
+	n = sqlite3_column_count(stmt);
+	if (n <= 0)
+	{
+		return;
+	}
+
+	// Print Row header.
+	for (int i = 0; i !=n; ++i)
+	{
+		name = sqlite3_column_name(stmt, i);
+		if (name != NULL)
+		{
+			fprintf(stdout, "%s\t", name);
+		}
+		else
+		{
+			fprintf(stdout, "%s\t", "NULL");
+		}
+	}
+	fprintf(stdout, "\n");
+
+	do {
+		for (int i = 0; i != n; ++i)
+		{
+			type = sqlite3_column_type(stmt, i);
+			switch(type)
+			{
+				case SQLITE_INTEGER:
+				{
+					fprintf(stdout, "%d\t", sqlite3_column_int(stmt, i));
+					break;
+				}
+				case SQLITE_TEXT:
+				{
+					value = sqlite3_column_text(stmt, i);
+					if (value)
+					{
+						fprintf(stdout, "%s\t", value);
+					}
+					else
+					{
+						fprintf(stdout, "%s\t", "NULL");
+					}
+					break;
+				}
+				default:
+				{
+					fprintf(stdout, "Unhandled\t");
+					break;
+				}
+			}
+		}
+		fputc('\n', stdout);
+	} 
+	while (SQLITE_ROW == sqlite3_step(stmt));
 }

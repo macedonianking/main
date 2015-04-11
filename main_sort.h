@@ -1,6 +1,13 @@
 #ifndef MAIN_SORT_H
 #define MAIN_SORT_H
 
+// 堆左子
+#define HEAP_L(x)	(((x) << 1) + 1)
+// 堆右子
+#define HEAP_R(x)	(((x) << 1) + 2)
+// 堆父成员
+#define HEAP_P(x)	(((x)- 1) >> 1)
+
 struct main_money_count
 {
 	int 	value;
