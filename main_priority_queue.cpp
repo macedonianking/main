@@ -25,7 +25,10 @@ int main_max_priority_queue_take(int *ptr, int *n)
 	r = ptr[0];
 	ptr[0] = ptr[*n - 1];
 	--*n;
-	main_max_heapify(ptr, *n, 0);
+	if (*n > 0)
+	{
+		main_max_heapify(ptr, *n, 0);
+	}
 	return r;
 }
 
@@ -89,6 +92,79 @@ void main_max_priority_queue_insert(int *ptr, int *n, int v)
 	{
 		k = (i - 1) >> 1;
 		if (ptr[k] >= ptr[i])
+		{
+			break;
+		}
+
+		t = ptr[k];
+		ptr[k] = ptr[i];
+		ptr[i] = t;
+		i = k;
+	}
+}
+
+int main_min_priority_queue_take(int *ptr, int *n)
+{
+	int r;
+
+	if (*n <= 0)
+	{
+		return 0;
+	}
+
+	r = ptr[0];
+	ptr[0] = ptr[*n - 1];
+	if (*n > 0)
+	{
+		main_min_heapify(ptr, *n, 0);
+	}
+
+	return r;
+}
+
+void main_min_priority_queue_decrease_key(int *ptr, int n, int i, int new_key)
+{
+	int k;
+	int t;
+
+	if (ptr[i] < new_key)
+	{
+		/**
+		 * 不能变大
+		 */
+		return;
+	}
+
+	ptr[i] = new_key;
+	while (i > 0)
+	{
+		k = (i - 1) >> 1;
+		if (ptr[k] <= ptr[i])
+		{
+			break;
+		}
+
+		t = ptr[k];
+		ptr[k] = ptr[i];
+		ptr[i] = t;
+		i = k;
+	}
+}
+
+void main_min_priority_queue_insert(int *ptr, int *n, int v)
+{
+	int i;
+	int k;
+	int t;
+
+	i = *n;
+	ptr[i] = v;
+	++*n;
+
+	while (i > 0)
+	{
+		k = (i - 1) >> 1;
+		if (ptr[k] <= ptr[i])
 		{
 			break;
 		}

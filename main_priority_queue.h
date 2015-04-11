@@ -19,4 +19,16 @@ void main_max_priority_queue_increase_key(int *ptr, int n, int i, int newKey);
  */
 void main_max_priority_queue_insert(int *ptr, int *n, int v);
 
+/**
+ * 获取最小优先级队列的第一个值
+ */
+int main_min_priority_queue_take(int *ptr, int *n);
+
+/**
+ * 减小一个最小优先级队列的元素的权值
+ */
+void main_min_priority_queue_decrease_key(int *ptr, int n, int i, int new_key);
+
+void main_min_priority_queue_insert(int *ptr, int *n, int v);
+
 #endif // MAIN_PRIORITY_QUEUE_H
