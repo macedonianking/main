@@ -14,6 +14,7 @@
 #ifdef F_MAIN_TEST
 static void main_test_find_maximum_linear_buffer();
 static void main_test_heap_sort();
+static void main_test_quick_sort();
 #endif // F_MAIN_TEST
 
 void main_money_find_test();
@@ -52,6 +53,7 @@ void main_sort_test()
 	#ifdef F_MAIN_TEST
 	main_test_find_maximum_linear_buffer();
 	main_test_heap_sort();
+	main_test_quick_sort();
 	#endif
 }
 
@@ -1051,6 +1053,22 @@ void main_test_heap_sort()
 	delete buffer;
 	buffer = NULL;
 }
+
+void main_test_quick_sort()
+{
+	int *ptr;
+	int n;
+
+	// 快速排序
+	n = 10;
+	ptr = main_random_integer_buffer(n, F_MAIN_TEST_BUFFER_FM, F_MAIN_TEST_BUFFER_TO);
+	main_quick_sort(ptr, n);
+	fprintf(stdout, "quick sort:\n");
+	main_print_int_buffer(ptr, n);
+
+	free(ptr);
+	ptr = NULL;
+}
 #endif // F_MAIN_TEST
 
 void main_build_max_heapify(int *ptr, int n)
@@ -1097,4 +1115,60 @@ void main_heap_sort(int *ptr, int n)
 		 */
 		main_max_heapify(ptr, i, 0);
 	}
+}
+
+static void main_quick_sort_impl(int *ptr, int s, int e);
+static int  main_quick_sort_partition(int *ptr, int s, int e);
+
+void main_quick_sort(int *ptr, int n)
+{
+	main_quick_sort_impl(ptr, 0, n);
+}
+
+void main_quick_sort_impl(int *ptr, int s, int e)
+{
+	int p;
+
+	if (e - s <= 1)
+	{
+		return;
+	}
+
+	p = main_quick_sort_partition(ptr, s, e);
+	main_quick_sort_impl(ptr, s, p);
+	main_quick_sort_impl(ptr, p + 1, e);
+}
+
+int main_quick_sort_partition(int *ptr, int s, int e)
+{
+	int v;
+	int i;
+	int j;
+	int k;
+	int t;
+
+	i = s - 1;
+	k = e - 1;
+	v = ptr[k];
+	for (j = s; j < k; ++j)
+	{
+		if (ptr[j] <= v)
+		{
+			++i;
+			if (j != i)
+			{
+				t = ptr[j];
+				ptr[j] = ptr[i];
+				ptr[i] = t;
+			}
+		}
+	}
+	++i;
+	if (i != k)
+	{
+		t = ptr[i];
+		ptr[i] = ptr[k];
+		ptr[k] = t;
+	}
+	return i;
 }

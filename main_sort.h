@@ -112,4 +112,9 @@ void main_build_min_heapify(int *ptr, int n);
  */
 void main_heap_sort(int *ptr, int n);
 
+/**
+ * 快速排序
+ */
+void main_quick_sort(int *ptr, int n);
+
 #endif // MAIN_SORT_H
