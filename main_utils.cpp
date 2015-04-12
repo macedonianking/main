@@ -28,7 +28,7 @@ int *main_random_integer_buffer(int n, int s, int e)
 	}
 
 	ptr = (int*) malloc(sizeof(int) * n);
-	srand((unsigned)time(NULL));
+	srand((unsigned)clock());
 	for (i = 0; i < n; ++i)
 	{
 		ptr[i] = rand() % (e - s) + s;
