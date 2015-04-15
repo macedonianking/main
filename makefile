@@ -29,6 +29,8 @@ SOURCE_FILES	:= 	main.cpp \
 					main_priority_queue.cpp \
 					main_utils.cpp \
 					main_print.cpp \
+					main_hash_table.cpp \
+					main_tree.cpp \
 					${CURL_SOURCE_FILES}
 
 OBJECT_FILES	:= $(patsubst %.cpp,%.o,$(SOURCE_FILES))

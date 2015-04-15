@@ -13,4 +13,6 @@
 
 int *main_random_integer_buffer(int n, int s, int e);
 
+#define ARRAY_SIZE(b) (sizeof(b) / sizeof(b[0]))
+
 #endif // MAIN_UTILS_H
