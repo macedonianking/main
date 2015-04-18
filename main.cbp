@@ -33,7 +33,34 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/sqlite3.h" />
+		<Unit filename="include/sqlite3ext.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="main_config.h" />
+		<Unit filename="main_curl.cpp" />
+		<Unit filename="main_curl.h" />
+		<Unit filename="main_hash_table.cpp" />
+		<Unit filename="main_hash_table.h" />
+		<Unit filename="main_http.h" />
+		<Unit filename="main_log.h" />
+		<Unit filename="main_print.cpp" />
+		<Unit filename="main_print.h" />
+		<Unit filename="main_priority_queue.cpp" />
+		<Unit filename="main_priority_queue.h" />
+		<Unit filename="main_signal.cpp" />
+		<Unit filename="main_signal.h" />
+		<Unit filename="main_solutions.cpp" />
+		<Unit filename="main_solutions.h" />
+		<Unit filename="main_sort.cpp" />
+		<Unit filename="main_sort.h" />
+		<Unit filename="main_sqlite3.cpp" />
+		<Unit filename="main_sqlite3.h" />
+		<Unit filename="main_string_builder.cpp" />
+		<Unit filename="main_string_builder.h" />
+		<Unit filename="main_tree.cpp" />
+		<Unit filename="main_tree.h" />
+		<Unit filename="main_utils.cpp" />
+		<Unit filename="main_utils.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

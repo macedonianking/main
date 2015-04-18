@@ -13,6 +13,10 @@ struct signo_handler_entity
 
 static signo_handler_entity *gHandlerBuffer[MAX_HANDLER_BUFFER_SIZE] = {};
 
+// ²âÊÔµÄÀý×Ó
+static void main_signal_handler(int signo);
+static void main_signal_process(int signo);
+
 void (*local_signal(int signo, void (*handler)(int)))(int)
 {
 	struct signo_handler_entity **ptr, *next;
@@ -98,4 +102,46 @@ void release_local_signal_handlers()
 			*ptr = next;
 		}
 	}
+}
+
+void main_signal_test()
+{
+	void (*old_handler)(int);
+
+	old_handler = NULL;
+	old_handler = local_signal(10, main_signal_handler);
+	if (old_handler != NULL)
+	{
+		return;
+	}
+
+	do_local_signal(10);
+	old_handler = local_signal(10, main_signal_process);
+	if (old_handler != main_signal_handler)
+	{
+		printf("get old handler failure\n");
+		return;
+	}
+
+	do_local_signal(10);
+	old_handler = local_signal(10, main_signal_handler);
+	if (old_handler != main_signal_process)
+	{
+		printf("get old process failure\n");
+		return;
+	}
+
+	do_local_signal(10);
+	release_local_signal_handlers();
+	do_local_signal(10);
+}
+
+void main_signal_handler(int signo)
+{
+	printf("main_signal_handler:signo=%d\n", signo);
+}
+
+void main_signal_process(int signo)
+{
+	printf("main_signal_process:signo=%d\n", signo);
 }

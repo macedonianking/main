@@ -7,3 +7,4 @@ main.sublime-workspace
 bin
 obj
 /*.depend
+/main.layout
