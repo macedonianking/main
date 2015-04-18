@@ -22,9 +22,9 @@ static size_t curl_main_test_write_data_file(void *buffer, size_t size, size_t n
 
 void curl_main_test()
 {
-	#ifdef MAIN_DEBUG_ENABLED
+#ifdef MAIN_DEBUG_ENABLED
 	curl_main_test_version_info();
-	#endif // MAIN_DEBUG_ENABLED
+#endif // MAIN_DEBUG_ENABLED
 
 	// curl_main_test_http();
 	// curl_main_test_http_auth();
@@ -70,7 +70,7 @@ void curl_main_test_version_info()
 	 * Parse libcurl version from curl_version_info_data.version_num;
 	 */
 	major = (info->version_num >> 16) & 0xFF;
-	minor = (info->version_num >> 8)  & 0xFF;
+	minor = (info->version_num >> 8) & 0xFF;
 	patch = (info->version_num) & 0xFF;
 	printf("info->version=%d.%d.%d\n", major, minor, patch);
 }
@@ -170,7 +170,6 @@ void curl_main_test_http_post()
 	header = NULL;
 	header = curl_slist_append(header, "Content-Type: text/xml");
 
-
 	curl_easy_setopt(curl, CURLOPT_URL, URL_HTTP_POST_POSTHERE);
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
 	// curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, 23L);
@@ -240,7 +239,7 @@ void curl_main_test_get_info()
 	url = NULL;
 	n = 0L;
 	if (CURLE_OK == curl_easy_getinfo(curl, CURLINFO_REDIRECT_URL, &url)
-		&& CURLE_OK == curl_easy_getinfo(curl, CURLINFO_REDIRECT_COUNT, &n))
+			&& CURLE_OK == curl_easy_getinfo(curl, CURLINFO_REDIRECT_COUNT, &n))
 	{
 		fprintf(stdout, "Http redirect url:%s count=%ld\n", url, n);
 	}
@@ -258,7 +257,7 @@ void curl_main_test_get_info()
 	{
 		fprintf(stdout, "Content-Type:%s\n", header_value);
 	}
-CURL_FINISH:
+	CURL_FINISH:
 	if (file != NULL)
 	{
 		fclose(file);

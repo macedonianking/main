@@ -1,0 +1,141 @@
+# depslib dependency file v1.0
+1429346441 source:d:\dir\main\curl_main.cpp
+	<stdio.h>
+	<stdlib.h>
+	"main_log.h"
+	"main_http.h"
+	"curl_main.h"
+
+1428117126 d:\dir\main\main_log.h
+	"main_config.h"
+	<stdio.h>
+	<stdlib.h>
+
+1429346396 d:\dir\main\main_config.h
+
+1428117126 d:\dir\main\main_http.h
+
+1429346385 d:\dir\main\curl_main.h
+	<curl/curl.h>
+
+1428117126 source:d:\dir\main\local_signal.cpp
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+
+1429107769 source:d:\dir\main\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	"local_signal.h"
+	"curl_main.h"
+	"main_sort.h"
+	"main_sqlite3.h"
+	"main_string_builder.h"
+	"main_solutions.h"
+	"main_priority_queue.h"
+	"main_hash_table.h"
+	"main_tree.h"
+
+1425568726 d:\dir\main\local_signal.h
+
+1428805034 d:\dir\main\main_sort.h
+
+1428333756 d:\dir\main\main_sqlite3.h
+	"sqlite3.h"
+
+1428149127 d:\dir\main\main_string_builder.h
+
+1428154436 d:\dir\main\main_solutions.h
+
+1428763059 d:\dir\main\main_priority_queue.h
+
+1428841723 d:\dir\main\main_hash_table.h
+
+1429338259 d:\dir\main\main_tree.h
+
+1429346441 source:d:\dir\main\main_curl.cpp
+	<stdio.h>
+	<stdlib.h>
+	"main_log.h"
+	"main_http.h"
+	"curl_main.h"
+
+1429346651 source:d:\dir\main\main_hash_table.cpp
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+	"main_hash_table.h"
+	"main_config.h"
+	"main_utils.h"
+
+1429108648 d:\dir\main\main_utils.h
+
+1428117126 source:d:\dir\main\main_print.cpp
+	<stdio.h>
+	<stdlib.h>
+	"main_print.h"
+
+1428761317 d:\dir\main\main_print.h
+
+1428763124 source:d:\dir\main\main_priority_queue.cpp
+	<stdio.h>
+	<stdlib.h>
+	"main_priority_queue.h"
+	"main_utils.h"
+	"main_sort.h"
+	"main_print.h"
+
+1428117126 source:d:\dir\main\main_signal.cpp
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+
+1428157554 source:d:\dir\main\main_solutions.cpp
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"main_utils.h"
+	"main_solutions.h"
+
+1428805804 source:d:\dir\main\main_sort.cpp
+	<stdio.h>
+	<stdlib.h>
+	"main_sort.h"
+	<time.h>
+	"main_config.h"
+	"main_print.h"
+	"main_utils.h"
+
+1428840283 source:d:\dir\main\main_sqlite3.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<memory.h>
+	"main_sqlite3.h"
+	"main_utils.h"
+	"main_string_builder.h"
+
+1428149797 source:d:\dir\main\main_string_builder.cpp
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+	<string.h>
+	<stdarg.h>
+	"main_string_builder.h"
+	"main_utils.h"
+
+1429343348 source:d:\dir\main\main_tree.cpp
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+	"main_tree.h"
+	"main_utils.h"
+	"main_print.h"
+
+1428806306 source:d:\dir\main\main_utils.cpp
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+	<time.h>
+	"main_utils.h"
+

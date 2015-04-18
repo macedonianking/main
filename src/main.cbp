@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="main" />
+		<Option makefile="makefile" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/main" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/main" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="include/sqlite3.h" />
+		<Unit filename="include/sqlite3ext.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="main_config.h" />
+		<Unit filename="main_curl.cpp" />
+		<Unit filename="main_curl.h" />
+		<Unit filename="main_hash_table.cpp" />
+		<Unit filename="main_hash_table.h" />
+		<Unit filename="main_http.h" />
+		<Unit filename="main_log.h" />
+		<Unit filename="main_print.cpp" />
+		<Unit filename="main_print.h" />
+		<Unit filename="main_priority_queue.cpp" />
+		<Unit filename="main_priority_queue.h" />
+		<Unit filename="main_signal.cpp" />
+		<Unit filename="main_signal.h" />
+		<Unit filename="main_solutions.cpp" />
+		<Unit filename="main_solutions.h" />
+		<Unit filename="main_sort.cpp" />
+		<Unit filename="main_sort.h" />
+		<Unit filename="main_sqlite3.cpp" />
+		<Unit filename="main_sqlite3.h" />
+		<Unit filename="main_string_builder.cpp" />
+		<Unit filename="main_string_builder.h" />
+		<Unit filename="main_tree.cpp" />
+		<Unit filename="main_tree.h" />
+		<Unit filename="main_utils.cpp" />
+		<Unit filename="main_utils.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

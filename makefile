@@ -1,7 +1,7 @@
 SOURCE_FILES	:= $(wildcard *.cpp)
 OBJECT_FILES	:= $(patsubst %.cpp,%.o,$(SOURCE_FILES))
 
-CFLAGS			:= -c -g -std=c++0x -Wunused-variable
+CFLAGS			:= -O0 -g3 -Wall -c -fmessage-length=0
 C_INCLUDE_PATH	:= -Iinclude
 
 MAIN			:= main.exe
@@ -14,7 +14,7 @@ ${MAIN}: ${OBJECT_FILES}
 	g++ -o $@ $^ -lsqlite3 -L.
 
 %.o: %.cpp
-	gcc -g ${CFLAGS} ${CPPFLAGS} ${C_INCLUDE_PATH} $< -o $@ -lsqlite3 -L.
+	g++ ${CFLAGS} ${CPPFLAGS} ${C_INCLUDE_PATH} $< -o $@ -lsqlite3 -L.
 
 .PHONY: clean
 clean:
