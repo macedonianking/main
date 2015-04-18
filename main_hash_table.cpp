@@ -4,6 +4,7 @@
 
 #include "main_hash_table.h"
 #include "main_config.h"
+#include "main_utils.h"
 
 struct main_hash_list_node
 {
@@ -100,7 +101,7 @@ void main_hash_list_release(struct main_hash_list_node *list)
 		next = list->next;
 		list->next = NULL;
 		free(list);
-		list = next;		
+		list = next;
 	}
 }
 

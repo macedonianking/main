@@ -4,3 +4,6 @@ main.exe
 main
 main.sublime-workspace
 /*.db
+bin
+obj
+/*.depend

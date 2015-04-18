@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef F_USE_CURL
+
 #include "main_log.h"
 #include "main_http.h"
 
@@ -223,7 +225,7 @@ void curl_main_test_get_info()
 	}
 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_perform(curl);
-	
+
 	fprintf(stdout, "\n");
 	if (CURLE_OK == curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &status_code))
 	{
@@ -265,3 +267,4 @@ CURL_FINISH:
 	curl_easy_cleanup(curl);
 	curl = NULL;
 }
+#endif

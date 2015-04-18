@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "local_signal.h"
-#include "curl_main.h"
+#include "main_signal.h"
+#include "main_curl.h"
 #include "main_sort.h"
 #include "main_sqlite3.h"
 #include "main_string_builder.h"
@@ -69,12 +69,12 @@ void main_signal_test()
 
 void main_signal_handler(int signo)
 {
-	printf("main_signal_handler:singo=%d\n", signo);
+	printf("main_signal_handler:signo=%d\n", signo);
 }
 
 void main_signal_process(int signo)
 {
-	printf("main_signal_process:singo=%d\n", signo);
+	printf("main_signal_process:signo=%d\n", signo);
 }
 
 void main_program_enter()

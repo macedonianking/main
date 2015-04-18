@@ -3,5 +3,4 @@
 
 #define MAIN_DEBUG_ENABLED	1
 
-
 #endif // MAIN_CONFIG_H
