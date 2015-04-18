@@ -6,47 +6,49 @@
 #include "main_utils.h"
 #include "main_print.h"
 
-static void main_tree_traversal_test();
-static void main_tree_middle_traversal_test(struct main_tree_node *node);
-static void main_tree_front_traversal_test(struct main_tree_node *node);
-static void main_tree_back_traversal_test(struct main_tree_node *node);
+// 测试遍历顺序的代码
+static void main_tree_tree_walk_test();
+// 中序遍历代码
+static void main_tree_inorder_tree_walk_test(struct main_tree_node *node);
+// 先序遍历代码
+static void main_tree_preorder_tree_walk_test(struct main_tree_node *node);
+// 测试后续遍历方法
+static void main_tree_postorder_tree_walk_test(struct main_tree_node *node);
+// 用stack实现的中序遍历
 static void main_tree_inorder_tree_walk_iter_test(struct main_tree_node *node);
 
 void main_tree_test()
 {
-	main_tree_traversal_test();
+	main_tree_tree_walk_test();
 }
 
 /**
  * 二叉搜索树中序遍历的例子
  */
-void main_tree_traversal_test()
+void main_tree_tree_walk_test()
 {
 	int buffer[] = { 6, 5, 2, 5, 7, 8 };
 	struct main_tree_node *head;
 
-	head = (struct main_tree_node*) malloc(sizeof(struct main_tree_node));
-	head->parent = head->left = head->right = NULL;
-	head->v = buffer[0];
-
-	for (int i = 1; i != ARRAY_SIZE(buffer); ++i)
+	head = NULL;
+	for (int i = 0; i != ARRAY_SIZE(buffer); ++i)
 	{
-		main_tree_add(head, buffer[i]);
+		head = main_tree_add(head, buffer[i]);
 	}
 
 	/**
 	 * 三种遍历顺序
 	 */
 	fprintf(stdout, "Middle traversal:\n");
-	main_tree_middle_traversal_test(head);
+	main_tree_inorder_tree_walk_test(head);
 	fprintf(stdout, "\n");
 
 	fprintf(stdout, "Front traversal:\n");
-	main_tree_front_traversal_test(head);
+	main_tree_preorder_tree_walk_test(head);
 	fprintf(stdout, "\n");
 
 	fprintf(stdout, "Back traversal:\n");
-	main_tree_back_traversal_test(head);
+	main_tree_postorder_tree_walk_test(head);
 	fprintf(stdout, "\n");
 
 	/**
@@ -67,8 +69,9 @@ void main_tree_release(struct main_tree_node *node)
 		return;
 	}
 
-	if (node->left) {
-		main_tree_release(node->left);	
+	if (node->left)
+	{
+		main_tree_release(node->left);
 		node->left = NULL;
 	}
 
@@ -77,54 +80,73 @@ void main_tree_release(struct main_tree_node *node)
 		main_tree_release(node->right);
 		node->right = NULL;
 	}
+	node->parent = NULL;
 	free(node);
 }
 
-void main_tree_add(struct main_tree_node *node, int v)
+/**
+ * 增加节点，返回ROOT节点
+ */
+struct main_tree_node *main_tree_add(struct main_tree_node *node, int v)
 {
-	if (v < node->v)
+	struct main_tree_node *p;
+	struct main_tree_node *h;
+
+	p = (struct main_tree_node*) malloc(sizeof(struct main_tree_node));
+	p->left = p->right = p->parent = NULL;
+	p->v = v;
+
+	if (!node)
 	{
-		if (!node->left)
+		return p;
+	}
+
+	h = node;
+	while (node)
+	{
+		if (v < node->v)
 		{
-			node->left = (struct main_tree_node*)malloc(sizeof(struct main_tree_node));
-			node->left->left = node->left->right = NULL;
-			node->left->parent = node;
-			node->left->v = v;
+			if (node->left)
+			{
+				node = node->left;
+			}
+			else
+			{
+				node->left = p;
+				p->parent = node;
+				break;
+			}
 		}
 		else
 		{
-			main_tree_add(node->left, v);
+			if (node->right)
+			{
+				node = node->right;
+			}
+			else
+			{
+				node->right = p;
+				p->parent = node;
+				break;
+			}
 		}
 	}
-	else
-	{
-		if (!node->right)
-		{
-			node->right = (struct main_tree_node *) malloc(sizeof(struct main_tree_node));
-			node->right->left = node->right->right = NULL;
-			node->right->parent = node;
-			node->right->v = v;
-		}
-		else
-		{
-			main_tree_add(node->right, v);
-		}
-	}
+	return h;
 }
 
-void main_tree_middle_traversal_test(struct main_tree_node *node)
+void main_tree_inorder_tree_walk_test(struct main_tree_node *node)
 {
 	if (!node)
 	{
 		return;
 	}
 
-	main_tree_middle_traversal_test(node->left);
+	main_tree_inorder_tree_walk_test(node->left);
 	fprintf(stdout, "%d ", node->v);
-	main_tree_middle_traversal_test(node->right);
+	main_tree_inorder_tree_walk_test(node->right);
 }
 
-void main_tree_front_traversal_test(struct main_tree_node *node)
+void main_tree_preorder_tree_walk_test(struct main_tree_node *node)
 {
 	if (!node)
 	{
@@ -132,19 +154,19 @@ void main_tree_front_traversal_test(struct main_tree_node *node)
 	}
 
 	fprintf(stdout, "%d ", node->v);
-	main_tree_front_traversal_test(node->left);
-	main_tree_front_traversal_test(node->right);
+	main_tree_preorder_tree_walk_test(node->left);
+	main_tree_preorder_tree_walk_test(node->right);
 }
 
-void main_tree_back_traversal_test(struct main_tree_node *node)
+void main_tree_postorder_tree_walk_test(struct main_tree_node *node)
 {
 	if (!node)
 	{
 		return;
 	}
 
-	main_tree_back_traversal_test(node->left);
-	main_tree_back_traversal_test(node->right);
+	main_tree_postorder_tree_walk_test(node->left);
+	main_tree_postorder_tree_walk_test(node->right);
 	fprintf(stdout, "%d ", node->v);
 }
 
@@ -241,7 +263,7 @@ void main_tree_depth_recursive(struct main_tree_node *node, int *n, int *max)
 /**
  * 二叉树的深度
  */
-int  main_tree_depth(struct main_tree_node *node)
+int main_tree_depth(struct main_tree_node *node)
 {
 	int n;
 	int max;
@@ -250,4 +272,99 @@ int  main_tree_depth(struct main_tree_node *node)
 	max = 0;
 	main_tree_depth_recursive(node, &n, &max);
 	return max;
+}
+
+/**
+ * 二叉树搜索
+ */
+struct main_tree_node *main_tree_search(struct main_tree_node *node, int v)
+{
+	while (node && node->v != v)
+	{
+		if (v < node->v)
+		{
+			node = node->left;
+		}
+		else
+		{
+			node = node->right;
+		}
+	}
+	return node;
+}
+
+/**
+ * 二叉树最大节点
+ */
+struct main_tree_node *main_tree_minimum(struct main_tree_node *node)
+{
+	if (!node)
+	{
+		return node;
+	}
+
+	while (node->left)
+	{
+		node = node->left;
+	}
+	return node;
+}
+
+/**
+ * 二叉树最小节点
+ */
+struct main_tree_node *main_tree_maximum(struct main_tree_node *node)
+{
+	if (!node)
+	{
+		return NULL;
+	}
+
+	while (node->right)
+	{
+		node = node->right;
+	}
+	return node;
+}
+
+/**
+ * 二叉树后继
+ */
+struct main_tree_node *main_tree_next(struct main_tree_node *node)
+{
+	struct main_tree_node *p;
+
+	if (node->right)
+	{
+		return main_tree_minimum(node->right);
+	}
+
+	p = node->parent;
+	while (p && p->left != node)
+	{
+		node = p;
+		p = node->parent;
+	}
+	return p;
+}
+
+/**
+ * 二叉树前驱
+ */
+struct main_tree_node *main_tree_prev(struct main_tree_node *node)
+{
+	struct main_tree_node *p;
+
+	if (node->left)
+	{
+		return main_tree_maximum(node->left);
+	}
+
+	p = node->parent;
+	while (p && p->right != node)
+	{
+		node = p;
+		p = node->parent;
+	}
+	return p;
 }
