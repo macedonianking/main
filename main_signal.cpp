@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <memory.h>
 
+#include "main_signal.h"
+
 #define MAX_HANDLER_BUFFER_SIZE	16
 
 struct signo_handler_entity
@@ -13,11 +15,11 @@ struct signo_handler_entity
 
 static signo_handler_entity *gHandlerBuffer[MAX_HANDLER_BUFFER_SIZE] = {};
 
-// ≤‚ ‘µƒ¿˝◊”
+// ‰∏§‰∏™ÊµãËØïÁöÑ‰æãÂ≠ê
 static void main_signal_handler(int signo);
 static void main_signal_process(int signo);
 
-void (*local_signal(int signo, void (*handler)(int)))(int)
+void (*main_set_local_handler(int signo, void (*handler)(int)))(int)
 {
 	struct signo_handler_entity **ptr, *next;
 	void (*old_handler)(int);
@@ -70,7 +72,7 @@ void (*local_signal(int signo, void (*handler)(int)))(int)
 	return old_handler;
 }
 
-void do_local_signal(int signo)
+void main_do_local_signal(int signo)
 {
 	struct signo_handler_entity *ptr;
 
@@ -86,7 +88,7 @@ void do_local_signal(int signo)
 	}
 }
 
-void release_local_signal_handlers()
+void main_release_local_handlers()
 {
 	int i;
 	struct signo_handler_entity **ptr, *next;
@@ -109,31 +111,31 @@ void main_signal_test()
 	void (*old_handler)(int);
 
 	old_handler = NULL;
-	old_handler = local_signal(10, main_signal_handler);
+	old_handler = main_set_local_handler(10, main_signal_handler);
 	if (old_handler != NULL)
 	{
 		return;
 	}
 
-	do_local_signal(10);
-	old_handler = local_signal(10, main_signal_process);
+	main_do_local_signal(10);
+	old_handler = main_set_local_handler(10, main_signal_process);
 	if (old_handler != main_signal_handler)
 	{
 		printf("get old handler failure\n");
 		return;
 	}
 
-	do_local_signal(10);
-	old_handler = local_signal(10, main_signal_handler);
+	main_do_local_signal(10);
+	old_handler = main_set_local_handler(10, main_signal_handler);
 	if (old_handler != main_signal_process)
 	{
 		printf("get old process failure\n");
 		return;
 	}
 
-	do_local_signal(10);
-	release_local_signal_handlers();
-	do_local_signal(10);
+	main_do_local_signal(10);
+	main_release_local_handlers();
+	main_do_local_signal(10);
 }
 
 void main_signal_handler(int signo)

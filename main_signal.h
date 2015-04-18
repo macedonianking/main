@@ -4,8 +4,8 @@
 // ≤‚ ‘≥Ã–Ú»Îø⁄
 void main_signal_test();
 
-void (*local_signal(int signo, void (*handler)(int)))(int);
-void do_local_signal(int singo);
-void release_local_signal_handlers();
+void (*main_set_local_handler(int signo, void (*handler)(int)))(int);
+void main_do_local_signal(int singo);
+void main_release_local_handlers();
 
 #endif // MAIN_LOCAL_SIGNAL_H
