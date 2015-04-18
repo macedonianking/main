@@ -49,6 +49,13 @@ void main_tree_traversal_test()
 	main_tree_back_traversal_test(head);
 	fprintf(stdout, "\n");
 
+	/**
+	 * Inorder tree walk
+	 */
+	fprintf(stdout, "Inorder tree walk:\n");
+	main_tree_inorder_tree_walk_iter_test(head);
+	fprintf(stdout, "\n");
+
 	main_tree_release(head);
 	head = NULL;
 }
@@ -199,6 +206,7 @@ void main_tree_inorder_tree_walk_iter_test(struct main_tree_node *node)
 		}
 		else if (INORDER_TREE_WALK_STATE_RIGHT == stack[i])
 		{
+			stack[i] = INORDER_TREE_WALK_STATE_NONE;
 			node = node->parent;
 			--i;
 		}
