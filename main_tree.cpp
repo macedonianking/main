@@ -192,6 +192,7 @@ void main_tree_inorder_tree_walk_iter_test(struct main_tree_node *node)
 			{
 				node = node->left;
 				++i;
+				stack[i] = INORDER_TREE_WALK_STATE_NONE;
 			}
 		}
 		else if (INORDER_TREE_WALK_STATE_LEFT == stack[i])
@@ -202,11 +203,11 @@ void main_tree_inorder_tree_walk_iter_test(struct main_tree_node *node)
 			{
 				node = node->right;
 				++i;
+				stack[i] = INORDER_TREE_WALK_STATE_NONE;
 			}
 		}
 		else if (INORDER_TREE_WALK_STATE_RIGHT == stack[i])
 		{
-			stack[i] = INORDER_TREE_WALK_STATE_NONE;
 			node = node->parent;
 			--i;
 		}
