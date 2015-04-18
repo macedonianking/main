@@ -9,3 +9,5 @@ obj
 /*.depend
 /main.layout
 /src/test.db
+/.settings
+/Debug
