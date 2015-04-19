@@ -17,9 +17,19 @@ static void main_tree_postorder_tree_walk_test(struct main_tree_node *node);
 // 用stack实现的中序遍历
 static void main_tree_inorder_tree_walk_iter_test(struct main_tree_node *node);
 
+/**
+ * 删除节点测试
+ */
+static void main_tree_test_delete_node(struct main_tree_node *node);
+static void main_tree_test_delete();
+
+static struct main_tree_node *main_tree_node_select(struct main_tree_node *head, int n);
+static struct main_tree_node *main_tree_node_select_impl(struct main_tree_node *head, int *i,
+		int t);
 void main_tree_test()
 {
 	main_tree_tree_walk_test();
+	main_tree_test_delete();
 }
 
 /**
@@ -367,4 +377,140 @@ struct main_tree_node *main_tree_prev(struct main_tree_node *node)
 		p = node->parent;
 	}
 	return p;
+}
+
+/**
+ * 移动节点
+ */
+void main_tree_transplant(struct main_tree_node **head, struct main_tree_node *u,
+		struct main_tree_node *v)
+{
+	if (u->parent)
+	{
+		if (u->parent->left == u)
+		{
+			u->parent->left = v;
+		}
+		else
+		{
+			u->parent->right = v;
+		}
+	}
+	else
+	{
+		*head = v;
+	}
+
+	if (v)
+	{
+		v->parent = u ? u->parent : NULL;
+	}
+}
+
+void main_tree_del(struct main_tree_node **head, struct main_tree_node *node)
+{
+	struct main_tree_node *y;
+
+	if (!node->left)
+	{
+		main_tree_transplant(head, node, node->right);
+	}
+	else if (!node->right)
+	{
+		main_tree_transplant(head, node, node->left);
+	}
+	else
+	{
+		y = main_tree_minimum(node->right);
+		if (node->right != y)
+		{
+			main_tree_transplant(head, y, y->right);
+			y->right = node->right;
+			y->right->parent = y;
+		}
+		main_tree_transplant(head, node, y);
+		y->left = node->left;
+		node->left->parent = y;
+	}
+}
+
+void main_tree_node_release(struct main_tree_node *node)
+{
+	if (node)
+	{
+		node->left = node->right = node->parent = NULL;
+		free(node);
+	}
+}
+
+struct main_tree_node *main_tree_node_select(struct main_tree_node *head, int n)
+{
+	int i;
+	i = 0;
+	return main_tree_node_select_impl(head, &i, n);
+}
+
+struct main_tree_node *main_tree_node_select_impl(struct main_tree_node *head, int *i, int t)
+{
+	struct main_tree_node *node;
+	if (!head)
+	{
+		return NULL;
+	}
+
+	node = main_tree_node_select_impl(head->left, i, t);
+	if (node)
+	{
+		return node;
+	}
+
+	if (*i == t)
+	{
+		return head;
+	}
+	++*i;
+	return main_tree_node_select_impl(head->right, i, t);
+}
+
+void main_tree_test_delete_node(struct main_tree_node *head)
+{
+	int n;
+	int t;
+	struct main_tree_node *node;
+
+	fprintf(stdout, "main_tree_test_delete_node:Enter\n");
+	n = main_tree_size(head);
+	while (n > 0)
+	{
+		fprintf(stdout, "%d:", n);
+		main_tree_inorder_tree_walk_test(head);
+		fprintf(stdout, "\n");
+		t = rand() % n;
+		node = main_tree_node_select(head, t);
+		if (!node)
+		{
+			// 遇到错误
+			break;
+		}
+		main_tree_del(&head, node);
+		main_tree_node_release(node);
+		n = main_tree_size(head);
+	}
+	fprintf(stdout, "main_tree_test_delete_node:Leave\n");
+}
+
+void main_tree_test_delete()
+{
+	int buffer0[] = { 2, 252, 401, 398, 330, 344, 397, 363 };
+	struct main_tree_node *head;
+
+	head = NULL;
+	for (int i = 0; i < (int) ARRAY_SIZE(buffer0); ++i)
+	{
+		head = main_tree_add(head, buffer0[i]);
+	}
+
+	fprintf(stdout, "main_tree_test_delete: Enter\n");
+	main_tree_test_delete_node(head);
+	fprintf(stdout, "main_tree_test_delete: Leave\n");
 }
