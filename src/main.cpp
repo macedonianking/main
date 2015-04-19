@@ -11,6 +11,7 @@
 #include "main_priority_queue.h"
 #include "main_hash_table.h"
 #include "main_tree.h"
+#include "main_scanner.h"
 
 static void main_program_enter();
 static void main_program_leave();
@@ -27,7 +28,8 @@ int main(int argc, char **argv)
 	// main_string_builder_test();
 	// main_solutions_run();
 	// main_hash_table_test();
-	main_tree_test();
+	// main_tree_test();
+	main_scanner_test();
 
 	// printf("Hello world\n");
 	main_program_leave();
